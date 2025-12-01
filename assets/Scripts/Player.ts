@@ -1,8 +1,18 @@
-import { _decorator, Component, EventMouse, EventTouch, Input, input, Node, Vec3 } from 'cc';
+import { _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
 export class Player extends Component {
+
+    @property(Prefab)
+    bullet1Prefab: Prefab = null;
+    @property(Node)
+    bulletParent: Node = null;
+    @property(Node)
+    bullet1Pos: Node = null;
+
+    shootRate: number = 0.2;
+    shootTimer: number = 0;
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
@@ -35,6 +45,17 @@ export class Player extends Component {
 
         this.node.setPosition(targetPos);
 
+    }
+
+    protected update(dt: number): void {
+        this.shootTimer += dt;
+        if (this.shootTimer >= this.shootRate) {
+            this.shootTimer = 0;
+            const bullet1 = instantiate(this.bullet1Prefab);
+            this.bulletParent.addChild(bullet1);
+            bullet1.setWorldPosition(this.bullet1Pos.worldPosition);
+        }
+            
     }
 }
 
