@@ -8,7 +8,7 @@ export class Player extends Component {
     }
 
     update(deltaTime: number) {
-        //
+        
     }
 }
 
