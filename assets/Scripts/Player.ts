@@ -1,6 +1,11 @@
 import { _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
+enum ShootType {
+    BULLET1 = 0,
+    BULLET2 = 1,
+}
+
 @ccclass('Player')
 export class Player extends Component {
 
@@ -11,8 +16,18 @@ export class Player extends Component {
     @property(Node)
     bullet1Pos: Node = null;
 
+    @property(Prefab)
+    bullet2Prefab: Prefab = null;
+    @property(Node)
+    bullet2PosLeft: Node = null;
+    @property(Node)
+    bullet2PosRight: Node = null;
+
     shootRate: number = 0.2;
     shootTimer: number = 0;
+
+    @property
+    shootType: ShootType = ShootType.BULLET1;
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
@@ -48,6 +63,19 @@ export class Player extends Component {
     }
 
     protected update(dt: number): void {
+
+        switch (this.shootType) {
+            case ShootType.BULLET1:
+                this.shootBullet1(dt);
+                break;
+            case ShootType.BULLET2:
+                this.shootBullet2(dt);
+                break;
+        }
+        
+    }
+
+    shootBullet1(dt: number) {
         this.shootTimer += dt;
         if (this.shootTimer >= this.shootRate) {
             this.shootTimer = 0;
@@ -55,7 +83,20 @@ export class Player extends Component {
             this.bulletParent.addChild(bullet1);
             bullet1.setWorldPosition(this.bullet1Pos.worldPosition);
         }
-            
+    }
+
+    shootBullet2(dt: number) {
+        this.shootTimer += dt;
+        if (this.shootTimer >= this.shootRate) {
+            this.shootTimer = 0;
+            const bullet2Left = instantiate(this.bullet2Prefab);
+            this.bulletParent.addChild(bullet2Left);
+            bullet2Left.setWorldPosition(this.bullet2PosLeft.worldPosition);
+
+            const bullet2Right = instantiate(this.bullet2Prefab);
+            this.bulletParent.addChild(bullet2Right);
+            bullet2Right.setWorldPosition(this.bullet2PosRight.worldPosition);
+        }
     }
 }
 
