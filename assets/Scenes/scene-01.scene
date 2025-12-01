@@ -11,7 +11,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "scene-2d",
+    "_name": "scene-01",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -84,8 +84,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 640,
-      "y": 360.27662517289076,
+      "x": 360,
+      "y": 640,
       "z": 0
     },
     "_lrot": {
@@ -214,8 +214,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1280,
-      "height": 720.5532503457814
+      "width": 720,
+      "height": 1280
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
