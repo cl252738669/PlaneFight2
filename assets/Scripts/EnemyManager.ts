@@ -25,13 +25,15 @@ export class EnemyManager extends Component {
         // }, this.enemy0SpawnTime);
 
         this.schedule(this.enemy0Spawn, this.enemy0SpawnTime);
-        this.schedule(this.enemy1Spawn, this.enemy1SpawnTime);
-        this.schedule(this.enemy2Spawn, this.enemy2SpawnTime);
+        // this.schedule(this.enemy1Spawn, this.enemy1SpawnTime);
+        // this.schedule(this.enemy2Spawn, this.enemy2SpawnTime);
 
     }
 
     protected onDestroy(): void {
         this.unschedule(this.enemy0Spawn);
+        // this.unschedule(this.enemy1Spawn);
+        // this.unschedule(this.enemy2Spawn);
     }
 
     update(deltaTime: number) {
