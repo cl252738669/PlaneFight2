@@ -23,6 +23,7 @@ export class Player extends Component {
     @property(Node)
     bullet2PosRight: Node = null;
 
+    @property
     shootRate: number = 0.2;
     shootTimer: number = 0;
 

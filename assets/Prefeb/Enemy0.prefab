@@ -281,6 +281,8 @@
     "ani": {
       "__id__": 7
     },
+    "animationHit": "",
+    "animationDown": "Enemy0_Down",
     "hp": 1,
     "_id": ""
   },
@@ -301,7 +303,7 @@
       "__id__": 15
     },
     "tag": 0,
-    "_group": 1,
+    "_group": 2,
     "_density": 1,
     "_sensor": true,
     "_friction": 0.2,
@@ -349,9 +351,9 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_group": 1,
+    "_group": 2,
     "_type": 1,
-    "_allowSleep": true,
+    "_allowSleep": false,
     "_gravityScale": 1,
     "_linearDamping": 0,
     "_angularDamping": 0,
@@ -377,7 +379,6 @@
       "__id__": 0
     },
     "fileId": "dfKKh3vjVKaqClge/SIBya",
-    "instance": null,
-    "targetOverrides": null
+    "targetOverrides": []
   }
 ]

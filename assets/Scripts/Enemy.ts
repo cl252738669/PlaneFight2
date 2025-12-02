@@ -10,6 +10,11 @@ export class Enemy extends Component {
     @property(Animation)
     ani:Animation = null;
 
+    @property(String)
+    animationHit: string = '';
+    @property(String)
+    animationDown: string = '';
+
     @property
     hp: number = 1;
 
@@ -24,18 +29,33 @@ export class Enemy extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
-        this.hp -= 1;
-        this.ani.play();
         console.log('Enemy onBeginContact with ' + otherCollider.node.name);
+        this.hp -= 1;
 
-        if (this.hp <= 0) {
+        if (otherCollider.node.name.startsWith('Bullet')) {
+            this.scheduleOnce(() => {
+                if (otherCollider.node && otherCollider.node.isValid) {
+                    otherCollider.node.destroy();
+                }
+            }, 0);
+        }
+
+        if (this.hp > 0) {
+            this.ani.play(this.animationHit);
+        } else {
+            this.ani.play(this.animationDown);
             if (this.collider) {
-                this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+                this.collider.enabled = false;
             }
+            
             this.ani.once(Animation.EventType.FINISHED, () => {
-                this.node.destroy();
+                if (this.node && this.node.isValid) {
+                    this.node.destroy();
+                }
             }, this);
         }
+        
+
     }
 
     update(deltaTime: number) {
