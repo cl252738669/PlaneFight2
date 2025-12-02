@@ -33,6 +33,7 @@ export class Enemy extends Component {
         this.hp -= 1;
 
         if (otherCollider.node.name.startsWith('Bullet')) {
+            otherCollider.enabled = false;
             this.scheduleOnce(() => {
                 if (otherCollider.node && otherCollider.node.isValid) {
                     otherCollider.node.destroy();
