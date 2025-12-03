@@ -1,4 +1,6 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Sprite, Vec3 } from 'cc';
+import { Reward, RewardType } from './Reward';
+import { Enemy } from './Enemy';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -24,6 +26,8 @@ export class Player extends Component {
     @property(Node)
     bullet2PosRight: Node = null;
 
+    shootTypeChangeDuration: number = 5;
+    shootTypeChangeTimer: number = 0;
     shootRate: number = 0.3;
     shootTimer: number = 0;
     collider: Collider2D = null;
@@ -87,45 +91,71 @@ export class Player extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) { 
-        console.log('Player onBeginContact with ' + otherCollider.node.name);
+        const enemy = otherCollider.node.getComponent(Enemy);
 
-        if (otherCollider.node.name.startsWith('Enemy')) {
-            if (this.isHit) {
-                return;
+        if (enemy) {
+            this.onContactWithEnemy();
+        } else {
+            const reward = otherCollider.node.getComponent(Reward);
+            if (reward) {
+                this.onContactWithReward(reward);
             }
+        }
+    }
 
-            this.liftCount -= 1;
-            if (this.liftCount > 0) {
-                this.ani.play(this.animationHit);
-                this.isHit = true;
+    onContactWithEnemy() {
+        if (this.isHit) {
+            return;
+        }
 
-                if (this.collider) {
-                    this.collider.enabled = false;
-                }
+        console.log('Player Hit!');
+        this.liftCount -= 1;
+        if (this.liftCount > 0) {
+            this.ani.play(this.animationHit);
+            this.isHit = true;
 
-                this.ani.once(Animation.EventType.FINISHED, () => {
-                     this.isHit = false;
+            this.ani.once(Animation.EventType.FINISHED, () => {
+                    this.isHit = false;
 
-                    if (this.collider) {
-                        this.collider.enabled = true;
-                    }
-                }, this);
-  
-            } else {
-                this.ani.play(this.animationDown);
+            }, this);
 
-                this.shootType = ShootType.NONE;
-                if (this.collider) {
-                    this.collider.enabled = false;
-                }
-                
-                this.ani.once(Animation.EventType.FINISHED, () => {
-                    if (this.node && this.node.isValid) {
-                        this.node.destroy();
-                    }
-                }, this);
+        } else {
+            this.ani.play(this.animationDown);
+
+            this.shootType = ShootType.NONE;
+            if (this.collider) {
+                this.collider.enabled = false;
             }
-        }   
+            
+            this.ani.once(Animation.EventType.FINISHED, () => {
+                if (this.node && this.node.isValid) {
+                    this.node.destroy();
+                }
+            }, this);
+        }
+    }
+
+    onContactWithReward(reward: Reward) {
+        console.log('Get Reward!');
+        switch (reward.rewardType) {
+            case RewardType.TwoShoot:
+                this.changeShootType(ShootType.BULLET2);
+                break;
+            case RewardType.Bomb:
+                break;
+        }
+
+        reward.getComponent(Collider2D).enabled = false;
+        reward.getComponent(Sprite).enabled = false;
+        reward.scheduleOnce(() => {
+            if (reward.node && reward.node.isValid) {
+                reward.node.destroy();
+            }
+        }, 0);
+    }
+
+    changeShootType(type: ShootType) {
+        this.shootType = type;
     }
 
     protected update(dt: number): void {
@@ -138,6 +168,7 @@ export class Player extends Component {
                 this.shootBullet2(dt);
                 break;
         }
+
         
     }
 
@@ -152,6 +183,12 @@ export class Player extends Component {
     }
 
     shootBullet2(dt: number) {
+        this.shootTypeChangeTimer += dt;
+        if (this.shootTypeChangeTimer >= this.shootTypeChangeDuration) {
+            this.changeShootType(ShootType.BULLET1);
+            this.shootTypeChangeTimer = 0;
+        }
+
         this.shootTimer += dt;
         if (this.shootTimer >= this.shootRate) {
             this.shootTimer = 0;
