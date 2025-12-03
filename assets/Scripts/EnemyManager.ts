@@ -19,6 +19,13 @@ export class EnemyManager extends Component {
     @property(Prefab)
     enemy2Prefab: Prefab = null;
 
+    @property
+    rewardSpawnTime: number = 10;
+    @property(Prefab)
+    reward1Prefab: Prefab = null;
+    @property(Prefab)
+    reward2Prefab: Prefab = null;
+
     start() {
         // this.schedule(() => {
         //     this.enemy0Spawn();
@@ -27,6 +34,7 @@ export class EnemyManager extends Component {
         this.schedule(this.enemy0Spawn, this.enemy0SpawnTime);
         this.schedule(this.enemy1Spawn, this.enemy1SpawnTime);
         this.schedule(this.enemy2Spawn, this.enemy2SpawnTime);
+        this.schedule(this.rewardSpawn, this.rewardSpawnTime);
 
     }
 
@@ -34,6 +42,7 @@ export class EnemyManager extends Component {
         this.unschedule(this.enemy0Spawn);
         this.unschedule(this.enemy1Spawn);
         this.unschedule(this.enemy2Spawn);
+        this.unschedule(this.rewardSpawn);
     }
 
     update(deltaTime: number) {
@@ -59,6 +68,19 @@ export class EnemyManager extends Component {
         this.node.addChild(enemy);
         const x = math.randomRangeInt(-150, 150);
         enemy.setPosition(x, 555);
+    }
+
+    rewardSpawn() {
+        const rewardType = math.randomRangeInt(0, 2);
+        let reward: Node = null;
+        if (rewardType === 0) {
+            reward = instantiate(this.reward1Prefab);
+        } else {
+            reward = instantiate(this.reward2Prefab);
+        }
+        this.node.addChild(reward);
+        const x = math.randomRangeInt(-200, 200);
+        reward.setPosition(x, 490);
     }
 }
 

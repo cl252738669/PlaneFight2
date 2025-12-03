@@ -1,6 +1,12 @@
 import { _decorator, Collider2D, Component, Contact2DType, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
+enum RewordType {
+    TwoShoot = 0,
+    Bomb = 1
+}
+
+
 @ccclass('Reword')
 export class Reword extends Component {
 
@@ -8,6 +14,11 @@ export class Reword extends Component {
     speed: number = 70;
 
     collider: Collider2D = null;
+    
+    isCollected: boolean = false;  // 添加标志位
+
+    @property
+    rewordType: RewordType = RewordType.TwoShoot;
 
     start() {
 
@@ -27,9 +38,9 @@ export class Reword extends Component {
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
         console.log('Reword onBeginContact with ' + otherCollider.node.name);
-        if (otherCollider.node.name === 'Player') { 
-        
-
+        if (otherCollider.node.name === 'Player' && !this.isCollected) {  // 检查标志位
+            this.isCollected = true;  // 立即标记为已收集
+            
             console.log('Get Reword!');
             if (this.collider) {
                 this.collider.enabled = false;
