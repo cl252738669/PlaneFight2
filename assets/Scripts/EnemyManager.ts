@@ -50,37 +50,33 @@ export class EnemyManager extends Component {
     }
 
     enemy0Spawn() {
-        const enemy = instantiate(this.enemy0Prefab);
-        this.node.addChild(enemy);
-        const x = math.randomRangeInt(-205, 205);
-        enemy.setPosition(x, 450);
+        this.nodeSpawn(this.enemy0Prefab, 205, 450);
     }
 
     enemy1Spawn() {
-        const enemy = instantiate(this.enemy1Prefab);
-        this.node.addChild(enemy);
-        const x = math.randomRangeInt(-200, 200);
-        enemy.setPosition(x, 480);
+        this.nodeSpawn(this.enemy1Prefab, 200, 480);
     }
 
     enemy2Spawn() {
-        const enemy = instantiate(this.enemy2Prefab);
-        this.node.addChild(enemy);
-        const x = math.randomRangeInt(-150, 150);
-        enemy.setPosition(x, 555);
+        this.nodeSpawn(this.enemy2Prefab, 150, 555);
     }
 
     rewardSpawn() {
         const rewardType = math.randomRangeInt(0, 2);
-        let reward: Node = null;
+        let reward: Prefab = null;
         if (rewardType === 0) {
-            reward = instantiate(this.reward1Prefab);
+            reward = this.reward1Prefab;
         } else {
-            reward = instantiate(this.reward2Prefab);
+            reward = this.reward2Prefab;
         }
-        this.node.addChild(reward);
-        const x = math.randomRangeInt(-200, 200);
-        reward.setPosition(x, 490);
+        this.nodeSpawn(reward, 200, 490);
+    }
+
+    nodeSpawn(prefeb: Prefab, xRange: number, yPos: number ) {
+        const node = instantiate(prefeb);
+        this.node.addChild(node);
+        const x = math.randomRangeInt(-xRange, xRange);
+        node.setPosition(x, yPos);
     }
 }
 
