@@ -19,13 +19,18 @@
       {
         "index": 3,
         "name": "PLAYER"
+      },
+      {
+        "index": 4,
+        "name": "REWORD"
       }
     ],
     "collisionMatrix": {
       "0": 1,
       "1": 12,
       "2": 2,
-      "3": 2
+      "3": 18,
+      "4": 8
     }
   },
   "custom_joint_texture_layouts": []

@@ -1,4 +1,4 @@
-import { _decorator, Animation, Collider2D, Component, Contact2DType, Node } from 'cc';
+import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -10,9 +10,9 @@ export class Enemy extends Component {
     @property(Animation)
     ani:Animation = null;
 
-    @property(String)
+    @property(CCString)
     animationHit: string = '';
-    @property(String)
+    @property(CCString)
     animationDown: string = '';
 
     @property

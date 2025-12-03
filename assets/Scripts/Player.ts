@@ -1,9 +1,10 @@
-import { _decorator, Animation, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
-    BULLET1 = 0,
-    BULLET2 = 1,
+    NONE,
+    BULLET1,
+    BULLET2,
 }
 
 @ccclass('Player')
@@ -23,24 +24,22 @@ export class Player extends Component {
     @property(Node)
     bullet2PosRight: Node = null;
 
-    @property
-    shootRate: number = 0.2;
+    shootRate: number = 0.3;
     shootTimer: number = 0;
     collider: Collider2D = null;
 
-    @property
     shootType: ShootType = ShootType.BULLET1;
 
     @property(Animation)
     ani:Animation = null;
 
-    @property(String)
+    @property(CCString)
     animationHit: string = '';
-    @property(String)
+    @property(CCString)
     animationDown: string = '';
 
     @property
-    hp: number = 3;
+    liftCount: number = 3;
 
     isHit: boolean = false;
 
@@ -61,6 +60,8 @@ export class Player extends Component {
     }
 
     onTouchMove(event: EventTouch) {
+
+        if (this.liftCount <= 0) { return; }
         let delta = event.getDelta();
 
         let targetPos = new Vec3();
@@ -93,8 +94,8 @@ export class Player extends Component {
                 return;
             }
 
-            this.hp -= 1;
-            if (this.hp > 0) {
+            this.liftCount -= 1;
+            if (this.liftCount > 0) {
                 this.ani.play(this.animationHit);
                 this.isHit = true;
 
@@ -112,6 +113,8 @@ export class Player extends Component {
   
             } else {
                 this.ani.play(this.animationDown);
+
+                this.shootType = ShootType.NONE;
                 if (this.collider) {
                     this.collider.enabled = false;
                 }
