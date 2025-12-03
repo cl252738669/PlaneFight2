@@ -1,6 +1,7 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Sprite, Vec3 } from 'cc';
 import { Reward, RewardType } from './Reward';
 import { Enemy } from './Enemy';
+import { GameManager } from './GameManager';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -46,6 +47,7 @@ export class Player extends Component {
     liftCount: number = 3;
 
     isHit: boolean = false;
+    isGetReward: boolean = false;
 
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
@@ -97,7 +99,7 @@ export class Player extends Component {
             this.onContactWithEnemy();
         } else {
             const reward = otherCollider.node.getComponent(Reward);
-            if (reward) {
+            if (reward && !this.isGetReward) {
                 this.onContactWithReward(reward);
             }
         }
@@ -137,11 +139,13 @@ export class Player extends Component {
 
     onContactWithReward(reward: Reward) {
         console.log('Get Reward!');
+        this.isGetReward = true;
         switch (reward.rewardType) {
             case RewardType.TwoShoot:
                 this.changeShootType(ShootType.BULLET2);
                 break;
             case RewardType.Bomb:
+                GameManager.instance.onAddbomb();
                 break;
         }
 
@@ -150,6 +154,7 @@ export class Player extends Component {
         reward.scheduleOnce(() => {
             if (reward.node && reward.node.isValid) {
                 reward.node.destroy();
+                this.isGetReward = false;
             }
         }, 0);
     }

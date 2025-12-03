@@ -1,4 +1,5 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node } from 'cc';
+import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -20,6 +21,8 @@ export class Enemy extends Component {
 
     collider: Collider2D = null;
 
+    isHit: boolean = false;
+
     start() {
          this.collider = this.getComponent(Collider2D);
         if (this.collider) {
@@ -29,34 +32,38 @@ export class Enemy extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
-        console.log('Enemy onBeginContact with ' + otherCollider.node.name);
-        
+        const bullet = otherCollider.node.getComponent(Bullet);
+        if (bullet && this.hp > 0 && !this.isHit) {
+            this.onContactWithBullet(bullet);
+        } 
+    }
 
-        if (otherCollider.node.name.startsWith('Bullet')) {
-            this.hp -= 1;
-            otherCollider.enabled = false;
-            this.scheduleOnce(() => {
-                if (otherCollider.node && otherCollider.node.isValid) {
-                    otherCollider.node.destroy();
-                }
-            }, 0);
-
-            if (this.hp > 0) {
-                this.ani.play(this.animationHit);
-            } else {
-                this.ani.play(this.animationDown);
-                if (this.collider) {
-                    this.collider.enabled = false;
-                }
-                
-                this.ani.once(Animation.EventType.FINISHED, () => {
-                    if (this.node && this.node.isValid) {
-                        this.node.destroy();
-                    }
-                }, this);
+    onContactWithBullet(bullet: Bullet) {
+        console.log('Enemy hit by Bullet');
+        this.isHit = true;
+        this.hp -= 1;
+        bullet.getComponent(Collider2D).enabled = false;
+        this.scheduleOnce(() => {
+            if (bullet.node && bullet.node.isValid) {
+                bullet.node.destroy();
+                this.isHit = false;
             }
-        }
+        }, 0);
 
+        if (this.hp > 0) {
+            this.ani.play(this.animationHit);
+        } else {
+            this.ani.play(this.animationDown);
+            if (this.collider) {
+                this.collider.enabled = false;
+            }
+            
+            this.ani.once(Animation.EventType.FINISHED, () => {
+                if (this.node && this.node.isValid) {
+                    this.node.destroy();
+                }
+            }, this);
+        }
     }
 
     update(deltaTime: number) {
