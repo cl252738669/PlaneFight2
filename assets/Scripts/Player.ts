@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
+import { _decorator, Animation, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -26,16 +26,38 @@ export class Player extends Component {
     @property
     shootRate: number = 0.2;
     shootTimer: number = 0;
+    collider: Collider2D = null;
 
     @property
     shootType: ShootType = ShootType.BULLET1;
 
+    @property(Animation)
+    ani:Animation = null;
+
+    @property(String)
+    animationHit: string = '';
+    @property(String)
+    animationDown: string = '';
+
+    @property
+    hp: number = 3;
+
+    isHit: boolean = false;
+
     protected onLoad(): void {
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        this.collider = this.getComponent(Collider2D);
+        if (this.collider) {
+            this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            
+        }
     }
 
     protected onDestroy(): void {
         input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        if (this.collider) {
+            this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
     }
 
     onTouchMove(event: EventTouch) {
@@ -61,6 +83,46 @@ export class Player extends Component {
 
         this.node.setPosition(targetPos);
 
+    }
+
+    onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) { 
+        console.log('Player onBeginContact with ' + otherCollider.node.name);
+
+        if (otherCollider.node.name.startsWith('Enemy')) {
+            if (this.isHit) {
+                return;
+            }
+
+            this.hp -= 1;
+            if (this.hp > 0) {
+                this.ani.play(this.animationHit);
+                this.isHit = true;
+
+                if (this.collider) {
+                    this.collider.enabled = false;
+                }
+
+                this.ani.once(Animation.EventType.FINISHED, () => {
+                     this.isHit = false;
+
+                    if (this.collider) {
+                        this.collider.enabled = true;
+                    }
+                }, this);
+  
+            } else {
+                this.ani.play(this.animationDown);
+                if (this.collider) {
+                    this.collider.enabled = false;
+                }
+                
+                this.ani.once(Animation.EventType.FINISHED, () => {
+                    if (this.node && this.node.isValid) {
+                        this.node.destroy();
+                    }
+                }, this);
+            }
+        }   
     }
 
     protected update(dt: number): void {

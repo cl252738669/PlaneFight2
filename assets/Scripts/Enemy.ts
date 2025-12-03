@@ -30,32 +30,32 @@ export class Enemy extends Component {
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
         console.log('Enemy onBeginContact with ' + otherCollider.node.name);
-        this.hp -= 1;
+        
 
         if (otherCollider.node.name.startsWith('Bullet')) {
+            this.hp -= 1;
             otherCollider.enabled = false;
             this.scheduleOnce(() => {
                 if (otherCollider.node && otherCollider.node.isValid) {
                     otherCollider.node.destroy();
                 }
             }, 0);
-        }
 
-        if (this.hp > 0) {
-            this.ani.play(this.animationHit);
-        } else {
-            this.ani.play(this.animationDown);
-            if (this.collider) {
-                this.collider.enabled = false;
-            }
-            
-            this.ani.once(Animation.EventType.FINISHED, () => {
-                if (this.node && this.node.isValid) {
-                    this.node.destroy();
+            if (this.hp > 0) {
+                this.ani.play(this.animationHit);
+            } else {
+                this.ani.play(this.animationDown);
+                if (this.collider) {
+                    this.collider.enabled = false;
                 }
-            }, this);
+                
+                this.ani.once(Animation.EventType.FINISHED, () => {
+                    if (this.node && this.node.isValid) {
+                        this.node.destroy();
+                    }
+                }, this);
+            }
         }
-        
 
     }
 
