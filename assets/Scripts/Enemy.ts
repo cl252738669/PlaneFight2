@@ -1,4 +1,4 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node } from 'cc';
+import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
 import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 
@@ -42,16 +42,20 @@ export class Enemy extends Component {
         console.log('Enemy hit by Bullet');
         this.isHit = true;
         this.hp -= 1;
+
         bullet.getComponent(Collider2D).enabled = false;
+        bullet.getComponent(Sprite).enabled = false;
         this.scheduleOnce(() => {
             if (bullet.node && bullet.node.isValid) {
                 bullet.node.destroy();
-                this.isHit = false;
             }
         }, 0);
 
         if (this.hp > 0) {
             this.ani.play(this.animationHit);
+            this.ani.once(Animation.EventType.FINISHED, () => {
+                this.isHit = false;
+            }, this);   
         } else {
             this.ani.play(this.animationDown);
             if (this.collider) {
@@ -59,6 +63,7 @@ export class Enemy extends Component {
             }
             
             this.ani.once(Animation.EventType.FINISHED, () => {
+                this.isHit = false;
                 if (this.node && this.node.isValid) {
                     this.node.destroy();
                 }

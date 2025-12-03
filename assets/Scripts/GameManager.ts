@@ -11,7 +11,10 @@ export class GameManager extends Component {
     }
 
     @property
-    private bombNumber: number = 0;
+    private bombNumber: number = 1;
+
+    @property
+    private lifeNumber: number = 3;
 
     onLoad() {
         if (GameManager._instance == null) {
@@ -21,24 +24,31 @@ export class GameManager extends Component {
         }
     }
 
-    start() {
+    onLifeCountChange(count: number) {
+        this.lifeNumber += count;
 
-    }
-
-    update(deltaTime: number) {
+        if (this.lifeNumber < 0) {
+            this.lifeNumber = 0;
+            return;
+        }   
         
+        this.node.emit('updateLifeCountUI', this.lifeNumber);
     }
 
-    onAddbomb() {
-        this.bombNumber += 1;
-        this.node.emit('updateBombUI',1111);
+    lifeCount(): number {
+        return this.lifeNumber;
     }
 
-    onUsebomb() {
-        if (this.bombNumber > 0) {
-            this.bombNumber -= 1;
-            this.node.emit('updateBombUI',0);
-        } 
+    onbombChange(count: number) {
+        this.bombNumber += count;
+
+        // 0个炸弹不处理
+        if (this.bombNumber < 0) {
+            this.bombNumber = 0;
+            return;
+        }
+
+        this.node.emit('updateBombUI',this.bombNumber);
     }
 
     bombCount(): number {

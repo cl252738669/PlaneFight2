@@ -10,12 +10,11 @@ export class BombUI extends Component {
 
     start() {
 
-        GameManager.instance.node.on('updateBombUI', (num: any) => {
+        this.bombLabel.string = `${GameManager.instance.bombCount()}`;
 
-            console.log('updateBombUI received in BombUI', num);
-            const bombNumber = GameManager.instance.bombCount();
-
-            this.bombLabel.string = `${bombNumber}`;
+        GameManager.instance.node.on('updateBombUI', (bombCount: number) => {
+            console.log('updateBombUI received in BombUI', bombCount);
+            this.bombLabel.string = `${bombCount}`;
         });
 
     }

@@ -43,9 +43,6 @@ export class Player extends Component {
     @property(CCString)
     animationDown: string = '';
 
-    @property
-    liftCount: number = 3;
-
     isHit: boolean = false;
     isGetReward: boolean = false;
 
@@ -56,6 +53,7 @@ export class Player extends Component {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             
         }
+   
     }
 
     protected onDestroy(): void {
@@ -67,7 +65,7 @@ export class Player extends Component {
 
     onTouchMove(event: EventTouch) {
 
-        if (this.liftCount <= 0) { return; }
+        if (GameManager.instance.lifeCount() <= 0) { return; }
         let delta = event.getDelta();
 
         let targetPos = new Vec3();
@@ -95,7 +93,7 @@ export class Player extends Component {
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) { 
         const enemy = otherCollider.node.getComponent(Enemy);
 
-        if (enemy) {
+        if (enemy && !this.isHit) {
             this.onContactWithEnemy();
         } else {
             const reward = otherCollider.node.getComponent(Reward);
@@ -106,16 +104,13 @@ export class Player extends Component {
     }
 
     onContactWithEnemy() {
-        if (this.isHit) {
-            return;
-        }
 
         console.log('Player Hit!');
-        this.liftCount -= 1;
-        if (this.liftCount > 0) {
+        //避免重复触发
+        this.isHit = true;
+        this.onLifeCountChange(-1);
+        if (GameManager.instance.lifeCount() > 0) {
             this.ani.play(this.animationHit);
-            this.isHit = true;
-
             this.ani.once(Animation.EventType.FINISHED, () => {
                     this.isHit = false;
 
@@ -123,18 +118,23 @@ export class Player extends Component {
 
         } else {
             this.ani.play(this.animationDown);
-
+            //停止攻击
             this.shootType = ShootType.NONE;
             if (this.collider) {
                 this.collider.enabled = false;
             }
             
             this.ani.once(Animation.EventType.FINISHED, () => {
+                this.isHit = false;
                 if (this.node && this.node.isValid) {
                     this.node.destroy();
                 }
             }, this);
         }
+    }
+
+    onLifeCountChange(newCount: number) {
+        GameManager.instance.onLifeCountChange(newCount);
     }
 
     onContactWithReward(reward: Reward) {
@@ -145,7 +145,7 @@ export class Player extends Component {
                 this.changeShootType(ShootType.BULLET2);
                 break;
             case RewardType.Bomb:
-                GameManager.instance.onAddbomb();
+                GameManager.instance.onbombChange(1);
                 break;
         }
 
