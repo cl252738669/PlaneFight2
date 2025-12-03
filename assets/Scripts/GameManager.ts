@@ -11,7 +11,7 @@ export class GameManager extends Component {
     }
 
     @property
-    bombNumber: number = 0;
+    private bombNumber: number = 0;
 
     onLoad() {
         if (GameManager._instance == null) {
@@ -20,7 +20,7 @@ export class GameManager extends Component {
             this.destroy();
         }
     }
-    
+
     start() {
 
     }
@@ -31,15 +31,18 @@ export class GameManager extends Component {
 
     onAddbomb() {
         this.bombNumber += 1;
+        this.node.emit('updateBombUI',1111);
     }
 
     onUsebomb() {
         if (this.bombNumber > 0) {
             this.bombNumber -= 1;
-            return true;
-        } else {
-            return false;
-        }
+            this.node.emit('updateBombUI',0);
+        } 
+    }
+
+    bombCount(): number {
+        return this.bombNumber;
     }
 }
 
