@@ -1,5 +1,6 @@
 import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
 import { Bullet } from './Bullet';
+import { GameManager } from './GameManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -18,6 +19,9 @@ export class Enemy extends Component {
 
     @property
     hp: number = 1;
+
+    @property
+    scoreValue: number = 100;
 
     collider: Collider2D = null;
 
@@ -58,6 +62,8 @@ export class Enemy extends Component {
             }, this);   
         } else {
             this.ani.play(this.animationDown);
+            //增加分数
+            GameManager.instance.onScoreChange(this.scoreValue);
             if (this.collider) {
                 this.collider.enabled = false;
             }

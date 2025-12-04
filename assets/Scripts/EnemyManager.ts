@@ -61,7 +61,9 @@ export class EnemyManager extends Component {
         this.nodeSpawn(this.enemy2Prefab, 150, 555);
     }
 
+    // 生成奖励
     rewardSpawn() {
+        // 随机一种奖励
         const rewardType = math.randomRangeInt(0, 2);
         let reward: Prefab = null;
         if (rewardType === 0) {

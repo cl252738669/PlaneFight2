@@ -43,7 +43,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": -74.695,
-      "y": 362.911,
+      "y": 485.911,
       "z": 0
     },
     "_lrot": {
@@ -288,6 +288,7 @@
     "animationHit": "Enemy1_Hit",
     "animationDown": "Enemy1_Down",
     "hp": 3,
+    "scoreValue": 300,
     "_id": ""
   },
   {
@@ -413,7 +414,6 @@
       "__id__": 0
     },
     "fileId": "bd1de8jMFPrK74qKdPWkDt",
-    "instance": null,
     "targetOverrides": []
   }
 ]

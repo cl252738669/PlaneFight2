@@ -288,6 +288,7 @@
     "animationHit": "Enemy2_Hit",
     "animationDown": "Enemy2_Down",
     "hp": 10,
+    "scoreValue": 700,
     "_id": ""
   },
   {
@@ -423,7 +424,6 @@
       "__id__": 0
     },
     "fileId": "21UW3/seVCM64+GtoZ39ay",
-    "instance": null,
     "targetOverrides": []
   }
 ]

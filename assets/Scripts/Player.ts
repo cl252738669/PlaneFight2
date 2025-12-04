@@ -145,7 +145,7 @@ export class Player extends Component {
                 this.changeShootType(ShootType.BULLET2);
                 break;
             case RewardType.Bomb:
-                GameManager.instance.onbombChange(1);
+                GameManager.instance.onBombChange(1);
                 break;
         }
 
