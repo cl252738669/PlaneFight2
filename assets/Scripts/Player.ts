@@ -131,6 +131,11 @@ export class Player extends Component {
                     this.node.destroy();
                 }
             }, this);
+
+            //游戏结束
+            this.scheduleOnce(() => {
+                GameManager.instance.gameOver();
+            }, 0.5);
         }
     }
 

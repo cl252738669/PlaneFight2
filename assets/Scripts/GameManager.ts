@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node } from 'cc';
+import { _decorator, Component, director, Node, find } from 'cc';
 const { ccclass, property } = _decorator;
 
 // 游戏配置常量
@@ -98,6 +98,13 @@ export class GameManager extends Component {
 
     getIsGamePaused(): boolean {
         return this.gamePaused;
+    }
+
+    gameOver() {
+        console.log('Game Over');
+        this.onPauseButtonClick();
+        this.node.emit('gameOverEvent', 1, this.score);
+        // this.resetGame();
     }
 
     // 重置游戏数据
