@@ -1,4 +1,5 @@
 import { _decorator, Component, director, Node, find } from 'cc';
+import { Player } from './Player';
 const { ccclass, property } = _decorator;
 
 // 游戏配置常量
@@ -23,6 +24,13 @@ export class GameManager extends Component {
     @property(Node)
     public resumeButton: Node = null;
 
+    @property(Node)
+    public enemyManager: Node = null;
+    @property(Node)
+    public bulletParent: Node = null;
+    @property(Node)
+    playerNode: Node = null;
+
     onLoad() {
         if (GameManager._instance == null) {
             GameManager._instance = this;
@@ -32,6 +40,7 @@ export class GameManager extends Component {
 
         this.pauseButton.active = true;
         this.resumeButton.active = false;
+
     }
 
      public static get instance(): GameManager {
@@ -117,24 +126,37 @@ export class GameManager extends Component {
         }
 
         this.node.emit('gameOverEvent', heighestScoreInt, this.score);
-        // this.resetGame();
     }
 
     onRestartGameButtonClick() {
         console.log('Restart Game');
-        this.resetGame();
-        director.loadScene('02-GameScene');
         this.onResumeButtonClick();
+
+        // 重新加载当前场景
+        // GameManager._instance = null;
+        // director.loadScene(director.getScene().name);
+
+        //手动重新置游戏数据
+        // 1. 重置游戏数据
+        this.resetGameData();
+        // 2. 清理场景中的动态对象
+        this.cleanupScene();
+        // 3. 重置玩家状态
+        this.resetPlayer();
+        // 4. 重新开始游戏逻辑
+        // this.startNewGame();
+        // 5. 隐藏游戏结束UI
+        this.hideGameOverUI();
+       
     }
 
     onQuitGameButtonClick() {
         console.log('Quit Game');
-        this.resetGame();
         // director.loadScene('01-Start');
     }
 
     // 重置游戏数据
-    resetGame() {
+    resetGameData() {
         this.bombNumber = GAME_CONFIG.INITIAL_BOMB;
         this.lifeNumber = GAME_CONFIG.INITIAL_LIFE;
         this.score = GAME_CONFIG.INITIAL_SCORE;
@@ -142,6 +164,40 @@ export class GameManager extends Component {
         this.node.emit('updateBombUI',this.bombNumber);
         this.node.emit('updateLifeCountUI', this.lifeNumber);
         this.node.emit('updateScoreUI', this.score);
+    }
+
+    cleanupScene() {
+        // 清理所有敌机(奖励也在里面)
+        if (this.enemyManager) {
+            const enemies = this.enemyManager.children;
+
+            console.log('Cleaning up enemies, count:', enemies.length);
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                enemies[i].destroy();
+            }
+        }
+        
+        // 清理所有子弹
+        if (this.bulletParent) {
+            const bullets = this.bulletParent.children;
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].destroy();
+            }
+        }
+        
+    }
+
+    // 重置玩家状态
+    resetPlayer() {
+        this.playerNode.active = true;
+        const player = this.playerNode.getComponent(Player);
+        if (player) {
+            player.resetPlayer();
+        }
+    }
+
+    hideGameOverUI() {
+       this.node.emit('hideGameOverUI');
     }
 }
 

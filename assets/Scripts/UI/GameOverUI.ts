@@ -21,6 +21,10 @@ export class GameOverUI extends Component {
             this.heighestScoreLabel.string = `${heighestScore}`;
             this.finalScoreLabel.string = `${finalScore}`;
         });
+
+        GameManager.instance.node.on('hideGameOverUI', () => {
+            this.bgNode.active = false;
+        });
     }
 }
 

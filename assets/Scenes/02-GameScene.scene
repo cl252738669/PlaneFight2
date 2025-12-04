@@ -26,7 +26,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 165
+      "__id__": 167
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -57,7 +57,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 166
+      "__id__": 168
     },
     "_id": "28dd1eb5-d8da-4f46-917c-58b96a39e483"
   },
@@ -107,13 +107,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 162
-      },
-      {
-        "__id__": 163
-      },
-      {
         "__id__": 164
+      },
+      {
+        "__id__": 165
+      },
+      {
+        "__id__": 166
       }
     ],
     "_prefab": null,
@@ -2095,6 +2095,15 @@
     "resumeButton": {
       "__id__": 128
     },
+    "enemyManager": {
+      "__id__": 67
+    },
+    "bulletParent": {
+      "__id__": 27
+    },
+    "playerNode": {
+      "__id__": 14
+    },
     "_id": "cdMMAVpJdKkJ+fAELXDVlW"
   },
   {
@@ -2109,16 +2118,16 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 157
-      },
-      {
-        "__id__": 158
-      },
-      {
         "__id__": 159
       },
       {
+        "__id__": 160
+      },
+      {
         "__id__": 161
+      },
+      {
+        "__id__": 163
       }
     ],
     "_prefab": null,
@@ -2185,13 +2194,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 154
-      },
-      {
-        "__id__": 155
-      },
-      {
         "__id__": 156
+      },
+      {
+        "__id__": 157
+      },
+      {
+        "__id__": 158
       }
     ],
     "_prefab": null,
@@ -3801,13 +3810,13 @@
         "__id__": 135
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
-        "__id__": 152
+        "__id__": 154
       },
       {
-        "__id__": 153
+        "__id__": 155
       }
     ],
     "_prefab": null,
@@ -3859,16 +3868,16 @@
         "__id__": 142
       },
       {
-        "__id__": 146
+        "__id__": 147
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
-        "__id__": 150
+        "__id__": 152
       },
       {
-        "__id__": 151
+        "__id__": 153
       }
     ],
     "_prefab": null,
@@ -4287,7 +4296,11 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 146
+      }
+    ],
     "_interactable": true,
     "_transition": 3,
     "_normalColor": {
@@ -4342,6 +4355,16 @@
     "_id": "26jsw7DVtLKocZMckeelqi"
   },
   {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 88
+    },
+    "component": "",
+    "_componentId": "528f5Xb/c5P1ZQmL2A6ZuD7",
+    "handler": "onRestartGameButtonClick",
+    "customEventData": ""
+  },
+  {
     "__type__": "cc.Node",
     "_name": "QuitBtnButton",
     "_objFlags": 0,
@@ -4353,13 +4376,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 147
-      },
-      {
         "__id__": 148
       },
       {
         "__id__": 149
+      },
+      {
+        "__id__": 150
       }
     ],
     "_prefab": null,
@@ -4398,7 +4421,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 146
+      "__id__": 147
     },
     "_enabled": true,
     "__prefab": null,
@@ -4420,7 +4443,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 146
+      "__id__": 147
     },
     "_enabled": true,
     "__prefab": null,
@@ -4459,11 +4482,15 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 146
+      "__id__": 147
     },
     "_enabled": true,
     "__prefab": null,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 151
+      }
+    ],
     "_interactable": true,
     "_transition": 3,
     "_normalColor": {
@@ -4514,6 +4541,16 @@
     "_zoomScale": 0.9,
     "_target": null,
     "_id": "90WS5EYLhFmaIcAHxgyoyJ"
+  },
+  {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 88
+    },
+    "component": "",
+    "_componentId": "528f5Xb/c5P1ZQmL2A6ZuD7",
+    "handler": "onQuitGameButtonClick",
+    "customEventData": ""
   },
   {
     "__type__": "cc.UITransform",
@@ -4613,6 +4650,9 @@
     },
     "finalScoreLabel": {
       "__id__": 141
+    },
+    "bgNode": {
+      "__id__": 135
     },
     "_id": "e9hnqxiQ1G/5MfBmbcwn9r"
   },
@@ -4757,7 +4797,7 @@
     "__prefab": null,
     "clickEvents": [
       {
-        "__id__": 160
+        "__id__": 162
       }
     ],
     "_interactable": true,
@@ -4943,28 +4983,28 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 167
-    },
-    "shadows": {
-      "__id__": 168
-    },
-    "_skybox": {
       "__id__": 169
     },
-    "fog": {
+    "shadows": {
       "__id__": 170
     },
-    "octree": {
+    "_skybox": {
       "__id__": 171
     },
-    "skin": {
+    "fog": {
       "__id__": 172
     },
-    "lightProbeInfo": {
+    "octree": {
       "__id__": 173
     },
-    "postSettings": {
+    "skin": {
       "__id__": 174
+    },
+    "lightProbeInfo": {
+      "__id__": 175
+    },
+    "postSettings": {
+      "__id__": 176
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
