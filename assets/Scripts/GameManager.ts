@@ -6,6 +6,7 @@ const GAME_CONFIG = {
     INITIAL_BOMB: 1,
     INITIAL_LIFE: 3,
     INITIAL_SCORE: 0,
+    HEIGHEST_SCORE: 'heighestScore',
 };
 
 @ccclass('GameManager')
@@ -34,6 +35,7 @@ export class GameManager extends Component {
     }
 
      public static get instance(): GameManager {
+
         return this._instance;
     }
 
@@ -103,8 +105,32 @@ export class GameManager extends Component {
     gameOver() {
         console.log('Game Over');
         this.onPauseButtonClick();
-        this.node.emit('gameOverEvent', 1, this.score);
+
+        let heighestScore = localStorage.getItem(GAME_CONFIG.HEIGHEST_SCORE);
+        let heighestScoreInt = 0;
+        if (heighestScore) {
+            heighestScoreInt = parseInt(heighestScore,10);
+        }
+
+        if (this.score > heighestScoreInt) {
+            localStorage.setItem(GAME_CONFIG.HEIGHEST_SCORE,this.score.toString())
+        }
+
+        this.node.emit('gameOverEvent', heighestScoreInt, this.score);
         // this.resetGame();
+    }
+
+    onRestartGameButtonClick() {
+        console.log('Restart Game');
+        this.resetGame();
+        director.loadScene('02-GameScene');
+        this.onResumeButtonClick();
+    }
+
+    onQuitGameButtonClick() {
+        console.log('Quit Game');
+        this.resetGame();
+        // director.loadScene('01-Start');
     }
 
     // 重置游戏数据
