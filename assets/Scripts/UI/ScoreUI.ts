@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ScoreUI')
 export class ScoreUI extends Component {
+    
     @property(Label)
     scoreCountLabel: Label = null;
 

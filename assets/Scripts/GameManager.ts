@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 // 游戏配置常量
@@ -15,6 +15,12 @@ export class GameManager extends Component {
     private bombNumber: number = GAME_CONFIG.INITIAL_BOMB;
     private lifeNumber: number = GAME_CONFIG.INITIAL_LIFE;
     private score: number = GAME_CONFIG.INITIAL_SCORE;
+    private gamePaused: boolean = false;
+
+    @property(Node)
+    public pauseButton: Node = null;
+    @property(Node)
+    public resumeButton: Node = null;
 
     onLoad() {
         if (GameManager._instance == null) {
@@ -22,12 +28,16 @@ export class GameManager extends Component {
         } else {
             this.destroy();
         }
+
+        this.pauseButton.active = true;
+        this.resumeButton.active = false;
     }
 
      public static get instance(): GameManager {
         return this._instance;
     }
 
+    // 生命变化
     onLifeCountChange(count: number) {
         this.lifeNumber += count;
 
@@ -43,6 +53,7 @@ export class GameManager extends Component {
         return this.lifeNumber;
     }
 
+    //
     onBombChange(count: number) {
         this.bombNumber += count;
 
@@ -59,6 +70,7 @@ export class GameManager extends Component {
         return this.bombNumber;
     }
 
+    // 分数变化
     onScoreChange(count: number) {
         this.score += count;
         this.node.emit('updateScoreUI', this.score);
@@ -68,7 +80,28 @@ export class GameManager extends Component {
         return this.score;
     }
 
-    reaetGame() {
+    onPauseButtonClick() {
+        console.log('Game Paused');
+        director.pause();
+        this.gamePaused = true;
+        this.pauseButton.active = false;
+        this.resumeButton.active = true;
+    }
+
+    onResumeButtonClick() {
+        console.log('Game Resumed');
+        director.resume();
+        this.gamePaused = false;
+        this.pauseButton.active = true;
+        this.resumeButton.active = false;
+    }
+
+    getIsGamePaused(): boolean {
+        return this.gamePaused;
+    }
+
+    // 重置游戏数据
+    resetGame() {
         this.bombNumber = GAME_CONFIG.INITIAL_BOMB;
         this.lifeNumber = GAME_CONFIG.INITIAL_LIFE;
         this.score = GAME_CONFIG.INITIAL_SCORE;

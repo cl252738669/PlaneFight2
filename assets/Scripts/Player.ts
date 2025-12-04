@@ -65,6 +65,7 @@ export class Player extends Component {
 
     onTouchMove(event: EventTouch) {
 
+        if (GameManager.instance.getIsGamePaused()) { return; }
         if (GameManager.instance.lifeCount() <= 0) { return; }
         let delta = event.getDelta();
 
