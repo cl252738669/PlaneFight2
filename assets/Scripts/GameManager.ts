@@ -2,6 +2,7 @@ import { _decorator, Component, director, Node, input, Input, AudioClip } from '
 import { Player } from './Player';
 import { Enemy } from './Enemy';
 import { AudioMgr } from './AudioMgr';
+import { EVENT_NAMES } from './EventConstants';
 const { ccclass, property } = _decorator;
 
 // 游戏配置常量
@@ -37,8 +38,6 @@ export class GameManager extends Component {
     gameMusic:AudioClip = null;
     @property(AudioClip)
     buttonAudio:AudioClip = null;
-    @property(AudioClip)
-    gameOverAudio:AudioClip = null;
     @property(AudioClip)
     useBombAudio:AudioClip = null;
 
@@ -115,7 +114,7 @@ export class GameManager extends Component {
             return;
         }   
 
-        this.node.emit('updateLifeCountUI', this.lifeNumber);
+        this.node.emit(EVENT_NAMES.UPDATE_LIFE_COUNT_UI, this.lifeNumber);
     }
 
     lifeCount(): number {
@@ -132,7 +131,7 @@ export class GameManager extends Component {
             return;
         }
 
-        this.node.emit('updateBombUI',this.bombNumber);
+        this.node.emit(EVENT_NAMES.UPDATE_BOMB_UI,this.bombNumber);
     }
 
     bombCount(): number {
@@ -142,7 +141,7 @@ export class GameManager extends Component {
     // 分数变化
     onScoreChange(count: number) {
         this.score += count;
-        this.node.emit('updateScoreUI', this.score);
+        this.node.emit(EVENT_NAMES.UPDATE_SCORE_UI, this.score);
     }
 
     scoreCount(): number {
@@ -157,6 +156,7 @@ export class GameManager extends Component {
         AudioMgr.inst.pause();
         director.pause();
         this.gamePaused = true;
+        this.node.emit(EVENT_NAMES.GAME_PAUSED);
         this.pauseButton.active = false;
         this.resumeButton.active = true;
     }
@@ -169,6 +169,7 @@ export class GameManager extends Component {
         AudioMgr.inst.resume();
         director.resume();
         this.gamePaused = false;
+        this.node.emit(EVENT_NAMES.GAME_RESUMED);
         this.pauseButton.active = true;
         this.resumeButton.active = false;
     }
@@ -180,7 +181,6 @@ export class GameManager extends Component {
     gameOver() {
         console.log('Game Over');
         this.onPauseButtonClick(false);
-        AudioMgr.inst.playOneShot(this.gameOverAudio);
 
         let heighestScore = localStorage.getItem(GAME_CONFIG.HEIGHEST_SCORE);
         let heighestScoreInt = 0;
@@ -192,7 +192,7 @@ export class GameManager extends Component {
             localStorage.setItem(GAME_CONFIG.HEIGHEST_SCORE,this.score.toString())
         }
 
-        this.node.emit('gameOverEvent', heighestScoreInt, this.score);
+        this.node.emit(EVENT_NAMES.GAME_OVER_EVENT, heighestScoreInt, this.score);
     }
 
     onRestartGameButtonClick() {
@@ -228,9 +228,9 @@ export class GameManager extends Component {
         this.lifeNumber = GAME_CONFIG.INITIAL_LIFE;
         this.score = GAME_CONFIG.INITIAL_SCORE;
 
-        this.node.emit('updateBombUI',this.bombNumber);
-        this.node.emit('updateLifeCountUI', this.lifeNumber);
-        this.node.emit('updateScoreUI', this.score);
+        this.node.emit(EVENT_NAMES.UPDATE_BOMB_UI,this.bombNumber);
+        this.node.emit(EVENT_NAMES.UPDATE_LIFE_COUNT_UI, this.lifeNumber);
+        this.node.emit(EVENT_NAMES.UPDATE_SCORE_UI, this.score);
     }
 
     cleanupScene() {
@@ -264,7 +264,7 @@ export class GameManager extends Component {
     }
 
     hideGameOverUI() {
-       this.node.emit('hideGameOverUI');
+       this.node.emit(EVENT_NAMES.HIDE_GAME_OVER_UI);
     }
 }
 

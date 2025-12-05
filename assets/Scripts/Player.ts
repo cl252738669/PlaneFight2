@@ -52,6 +52,8 @@ export class Player extends Component {
     getTwoShootAudio: AudioClip = null;
     @property(AudioClip)
     hurtAudio: AudioClip = null;
+    @property(AudioClip)
+    gameOverAudio:AudioClip = null;
 
     isHit: boolean = false;
     isGetReward: boolean = false;
@@ -127,20 +129,19 @@ export class Player extends Component {
             AudioMgr.inst.playOneShot(this.hurtAudio);
             this.ani.once(Animation.EventType.FINISHED, () => {
                 this.isHit = false;
-                     // 立即切换到循环播放 Player_Idle
-                this.scheduleOnce(() => {
-                    this.ani.play('Player_Idle');
-                    const idleState = this.ani.getState('Player_Idle');
-                    if (idleState) {
-                        idleState.repeatCount = Infinity;  // Player_Idle 无限循环
-                    }
-                }, 0);
+                    // 立即切换到循环播放 Player_Idle
+                this.ani.play('Player_Idle');
+                const idleState = this.ani.getState('Player_Idle');
+                if (idleState) {
+                    idleState.repeatCount = Infinity;  // Player_Idle 无限循环
+                }
 
             }, this);
 
         } else {
             // 播放死亡动画
             this.ani.play(this.animationDown);
+            AudioMgr.inst.playOneShot(this.gameOverAudio);
             //停止攻击
             this.shootType = ShootType.NONE;
             if (this.collider) {

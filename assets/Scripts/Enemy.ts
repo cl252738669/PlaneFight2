@@ -1,7 +1,8 @@
-import { _decorator, Animation, AudioClip, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
+import { _decorator, Animation, AudioClip, AudioSource, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
 import { Bullet } from './Bullet';
 import { GameManager } from './GameManager';
 import { AudioMgr } from './AudioMgr';
+import { EVENT_NAMES } from './EventConstants';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -39,6 +40,16 @@ export class Enemy extends Component {
             this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
            
         }
+
+        GameManager.instance.node.on(EVENT_NAMES.GAME_PAUSED, () => {
+            this.pausePlaneAudio(true);
+           
+        });
+
+        GameManager.instance.node.on(EVENT_NAMES.GAME_RESUMED, () => {
+            this.pausePlaneAudio(false);
+           
+        });
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: any) {
@@ -107,6 +118,22 @@ export class Enemy extends Component {
         if (this.collider) {
             this.collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
+    }
+
+    pausePlaneAudio(pause: boolean) {
+      if(this.node) {
+        const audioSource = this.node.getComponent(AudioSource)
+        if (audioSource) {
+            if (pause) {
+                audioSource.pause();
+            } else {
+                audioSource.play();
+                audioSource.loop = true;
+            }
+        
+       }
+     }
+       
     }
 }
 

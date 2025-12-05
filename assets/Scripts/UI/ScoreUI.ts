@@ -1,5 +1,6 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { GameManager } from '../GameManager';
+import { EVENT_NAMES } from '../EventConstants';
 const { ccclass, property } = _decorator;
 
 @ccclass('ScoreUI')
@@ -11,7 +12,7 @@ export class ScoreUI extends Component {
     start() {
 
         this.scoreCountLabel.string = `${GameManager.instance.scoreCount()}`;
-        GameManager.instance.node.on('updateScoreUI', (score: number) => {
+        GameManager.instance.node.on(EVENT_NAMES.UPDATE_SCORE_UI, (score: number) => {
             console.log('updateScoreUI received in ScoreUI', score);
             this.scoreCountLabel.string = `${score}`;
         });

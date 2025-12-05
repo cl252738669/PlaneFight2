@@ -1,5 +1,6 @@
 import { _decorator, Component, Label, Node, find } from 'cc';
 import { GameManager } from '../GameManager';
+import { EVENT_NAMES } from '../EventConstants';
 const { ccclass, property } = _decorator;
 
 @ccclass('LifeCountUI')
@@ -12,7 +13,7 @@ export class LifeCountUI extends Component {
 
         this.lifeCountLabel.string = `${GameManager.instance.lifeCount()}`;
 
-        GameManager.instance.node.on('updateLifeCountUI', (lifeCount: number) => {
+        GameManager.instance.node.on(EVENT_NAMES.UPDATE_LIFE_COUNT_UI, (lifeCount: number) => {
             console.log('updateLifeCountUI received in LifeCountUI', lifeCount);
             this.lifeCountLabel.string = `${lifeCount}`;
         });
