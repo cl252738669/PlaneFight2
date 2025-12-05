@@ -289,6 +289,10 @@
     "animationDown": "Enemy1_Down",
     "hp": 3,
     "scoreValue": 300,
+    "enemyDownAudio": {
+      "__uuid__": "0ad3577d-e73a-44fa-86fc-9e6df2f512a9",
+      "__expectedType__": "cc.AudioClip"
+    },
     "_id": ""
   },
   {
@@ -414,6 +418,7 @@
       "__id__": 0
     },
     "fileId": "bd1de8jMFPrK74qKdPWkDt",
+    "instance": null,
     "targetOverrides": []
   }
 ]

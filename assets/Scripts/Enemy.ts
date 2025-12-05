@@ -1,6 +1,7 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
+import { _decorator, Animation, AudioClip, CCString, Collider2D, Component, Contact2DType, Node, Sprite } from 'cc';
 import { Bullet } from './Bullet';
 import { GameManager } from './GameManager';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -28,6 +29,9 @@ export class Enemy extends Component {
     isHit: boolean = false;
 
     canExploe: boolean = true;
+
+    @property(AudioClip)
+    enemyDownAudio: AudioClip = null;
 
     start() {
          this.collider = this.getComponent(Collider2D);
@@ -71,6 +75,7 @@ export class Enemy extends Component {
         if(this.canExploe === false) { return }
         this.canExploe = false;
         this.ani.play(this.animationDown);
+        AudioMgr.inst.playOneShot(this.enemyDownAudio);
         //增加分数
         GameManager.instance.onScoreChange(this.scoreValue);
         if (this.collider) {

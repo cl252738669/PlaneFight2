@@ -1019,6 +1019,22 @@
     },
     "animationHit": "Player_Hit",
     "animationDown": "Player_Down",
+    "bulletAudio": {
+      "__uuid__": "d53cfcc8-5916-4a1d-8d14-1aaacd72b63e",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "getBombAudio": {
+      "__uuid__": "9cdb7f7b-3393-401b-ac45-088713fb6cc6",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "getTwoShootAudio": {
+      "__uuid__": "c3ec03cd-d62d-4a29-b456-7e354a27498b",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "hurtAudio": {
+      "__uuid__": "e8f83dac-a0a1-4d53-9ffb-d6029a07ce1a",
+      "__expectedType__": "cc.AudioClip"
+    },
     "_id": "da4pqObOZDDo6Kpj68lSci"
   },
   {
@@ -2171,6 +2187,18 @@
     },
     "gameMusic": {
       "__uuid__": "bb5e3bc2-3743-4008-bbb4-d75232388f64",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "buttonAudio": {
+      "__uuid__": "50107912-856d-4dae-a709-a3557afe1cf7",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "gameOverAudio": {
+      "__uuid__": "a7788790-1e4e-40ca-a1e8-b6a31aef9be2",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "useBombAudio": {
+      "__uuid__": "218a1ec2-205c-4db1-9615-d1f4d04a6070",
       "__expectedType__": "cc.AudioClip"
     },
     "_id": "cdMMAVpJdKkJ+fAELXDVlW"

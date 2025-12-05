@@ -1,7 +1,8 @@
-import { _decorator, Animation, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Sprite, Vec3 } from 'cc';
+import { _decorator, Animation, AudioClip, CCString, Collider2D, Component, Contact2DType, EventTouch, Input, input, instantiate, Node, Prefab, Sprite, Vec3 } from 'cc';
 import { Reward, RewardType } from './Reward';
 import { Enemy } from './Enemy';
 import { GameManager } from './GameManager';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 enum ShootType {
@@ -42,6 +43,15 @@ export class Player extends Component {
     animationHit: string = '';
     @property(CCString)
     animationDown: string = '';
+
+    @property(AudioClip)
+    bulletAudio: AudioClip = null;
+    @property(AudioClip)
+    getBombAudio: AudioClip = null;
+    @property(AudioClip)
+    getTwoShootAudio: AudioClip = null;
+    @property(AudioClip)
+    hurtAudio: AudioClip = null;
 
     isHit: boolean = false;
     isGetReward: boolean = false;
@@ -114,6 +124,7 @@ export class Player extends Component {
 
             // 播放受伤动画
             this.ani.play(this.animationHit);
+            AudioMgr.inst.playOneShot(this.hurtAudio);
             this.ani.once(Animation.EventType.FINISHED, () => {
                 this.isHit = false;
                      // 立即切换到循环播放 Player_Idle
@@ -160,9 +171,11 @@ export class Player extends Component {
         this.isGetReward = true;
         switch (reward.rewardType) {
             case RewardType.TwoShoot:
+                AudioMgr.inst.playOneShot(this.getTwoShootAudio);
                 this.changeShootType(ShootType.BULLET2);
                 break;
             case RewardType.Bomb:
+                AudioMgr.inst.playOneShot(this.getBombAudio);
                 GameManager.instance.onBombChange(1);
                 break;
         }
@@ -198,6 +211,7 @@ export class Player extends Component {
     shootBullet1(dt: number) {
         this.shootTimer += dt;
         if (this.shootTimer >= this.shootRate) {
+            AudioMgr.inst.playOneShot(this.bulletAudio,0.1);
             this.shootTimer = 0;
             const bullet1 = instantiate(this.bullet1Prefab);
             this.bulletParent.addChild(bullet1);
@@ -214,6 +228,7 @@ export class Player extends Component {
 
         this.shootTimer += dt;
         if (this.shootTimer >= this.shootRate) {
+            AudioMgr.inst.playOneShot(this.bulletAudio,0.1);
             this.shootTimer = 0;
             const bullet2Left = instantiate(this.bullet2Prefab);
             this.bulletParent.addChild(bullet2Left);

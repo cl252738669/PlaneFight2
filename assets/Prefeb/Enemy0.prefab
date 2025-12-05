@@ -284,6 +284,11 @@
     "animationHit": "",
     "animationDown": "Enemy0_Down",
     "hp": 1,
+    "scoreValue": 100,
+    "enemyDownAudio": {
+      "__uuid__": "a537f383-cae1-4e89-bc29-a341eb3735f7",
+      "__expectedType__": "cc.AudioClip"
+    },
     "_id": ""
   },
   {

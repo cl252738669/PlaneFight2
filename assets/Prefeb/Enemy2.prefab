@@ -292,6 +292,10 @@
     "animationDown": "Enemy2_Down",
     "hp": 10,
     "scoreValue": 700,
+    "enemyDownAudio": {
+      "__uuid__": "e802f5e3-d328-4a02-b570-6f8278277922",
+      "__expectedType__": "cc.AudioClip"
+    },
     "_id": ""
   },
   {

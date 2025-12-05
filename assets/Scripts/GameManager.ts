@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node, find, input, Input, AudioClip } from 'cc';
+import { _decorator, Component, director, Node, input, Input, AudioClip } from 'cc';
 import { Player } from './Player';
 import { Enemy } from './Enemy';
 import { AudioMgr } from './AudioMgr';
@@ -35,6 +35,12 @@ export class GameManager extends Component {
 
     @property(AudioClip)
     gameMusic:AudioClip = null;
+    @property(AudioClip)
+    buttonAudio:AudioClip = null;
+    @property(AudioClip)
+    gameOverAudio:AudioClip = null;
+    @property(AudioClip)
+    useBombAudio:AudioClip = null;
 
     doubleClickInterval: number = 0.5;
     lastClickTime: number = 0;
@@ -70,6 +76,7 @@ export class GameManager extends Component {
                if (this.enemyManager) {
                      // 使用炸弹
                     this.onBombChange(-1);
+                    AudioMgr.inst.playOneShot(this.useBombAudio);
                     const nodes = this.enemyManager.children;
 
                     for (let i = nodes.length - 1; i >= 0; i--) {
@@ -142,16 +149,24 @@ export class GameManager extends Component {
         return this.score;
     }
 
-    onPauseButtonClick() {
+    onPauseButtonClick(playAudio: boolean = true) {
         console.log('Game Paused');
+        if(playAudio) {
+            AudioMgr.inst.playOneShot(this.buttonAudio,1);
+        }
+        AudioMgr.inst.pause();
         director.pause();
         this.gamePaused = true;
         this.pauseButton.active = false;
         this.resumeButton.active = true;
     }
 
-    onResumeButtonClick() {
+    onResumeButtonClick(playAudio: boolean = true) {
         console.log('Game Resumed');
+        if(playAudio) {
+            AudioMgr.inst.playOneShot(this.buttonAudio,1);
+        }
+        AudioMgr.inst.resume();
         director.resume();
         this.gamePaused = false;
         this.pauseButton.active = true;
@@ -164,7 +179,8 @@ export class GameManager extends Component {
 
     gameOver() {
         console.log('Game Over');
-        this.onPauseButtonClick();
+        this.onPauseButtonClick(false);
+        AudioMgr.inst.playOneShot(this.gameOverAudio);
 
         let heighestScore = localStorage.getItem(GAME_CONFIG.HEIGHEST_SCORE);
         let heighestScoreInt = 0;
@@ -181,8 +197,8 @@ export class GameManager extends Component {
 
     onRestartGameButtonClick() {
         console.log('Restart Game');
-        this.onResumeButtonClick();
-
+        this.onResumeButtonClick(false);
+        AudioMgr.inst.playOneShot(this.buttonAudio,1);
         // 重新加载当前场景
         // GameManager._instance = null;
         // director.loadScene(director.getScene().name);
