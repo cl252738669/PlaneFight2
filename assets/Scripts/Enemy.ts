@@ -27,6 +27,8 @@ export class Enemy extends Component {
 
     isHit: boolean = false;
 
+    canExploe: boolean = true;
+
     start() {
          this.collider = this.getComponent(Collider2D);
         if (this.collider) {
@@ -61,20 +63,27 @@ export class Enemy extends Component {
                 this.isHit = false;
             }, this);   
         } else {
-            this.ani.play(this.animationDown);
-            //增加分数
-            GameManager.instance.onScoreChange(this.scoreValue);
-            if (this.collider) {
-                this.collider.enabled = false;
-            }
-            
-            this.ani.once(Animation.EventType.FINISHED, () => {
-                this.isHit = false;
-                if (this.node && this.node.isValid) {
-                    this.node.destroy();
-                }
-            }, this);
+            this.enemyExploe();
         }
+    }
+
+    enemyExploe() {
+        if(this.canExploe === false) { return }
+        this.canExploe = false;
+        this.ani.play(this.animationDown);
+        //增加分数
+        GameManager.instance.onScoreChange(this.scoreValue);
+        if (this.collider) {
+            this.collider.enabled = false;
+        }
+        
+        this.ani.once(Animation.EventType.FINISHED, () => {
+            this.isHit = false;
+            this.canExploe = true;
+            if (this.node && this.node.isValid) {
+                this.node.destroy();
+            }
+        }, this);
     }
 
     update(deltaTime: number) {

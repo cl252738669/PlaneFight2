@@ -1,11 +1,13 @@
-import { _decorator, Component, director, Node, find } from 'cc';
+import { _decorator, Component, director, Node, find, input, Input, AudioClip } from 'cc';
 import { Player } from './Player';
+import { Enemy } from './Enemy';
+import { AudioMgr } from './AudioMgr';
 const { ccclass, property } = _decorator;
 
 // 游戏配置常量
 const GAME_CONFIG = {
-    INITIAL_BOMB: 1,
-    INITIAL_LIFE: 3,
+    INITIAL_BOMB: 2,
+    INITIAL_LIFE: 5,
     INITIAL_SCORE: 0,
     HEIGHEST_SCORE: 'heighestScore',
 };
@@ -31,6 +33,12 @@ export class GameManager extends Component {
     @property(Node)
     playerNode: Node = null;
 
+    @property(AudioClip)
+    gameMusic:AudioClip = null;
+
+    doubleClickInterval: number = 0.5;
+    lastClickTime: number = 0;
+
     onLoad() {
         if (GameManager._instance == null) {
             GameManager._instance = this;
@@ -41,11 +49,54 @@ export class GameManager extends Component {
         this.pauseButton.active = true;
         this.resumeButton.active = false;
 
+        this.lastClickTime = 0;
+        input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+    }
+
+    protected start(): void {
+        AudioMgr.inst.play(this.gameMusic,true,0.3)
+    }
+
+    onTouchEnd(event: any) {
+        // 双击检测逻辑
+        const currentTime = Date.now() / 1000;
+        const timeDiff = currentTime - this.lastClickTime;
+        
+        if (timeDiff < this.doubleClickInterval) {
+            console.log('Double click detected');
+
+            if (this.bombNumber >= 1) {
+               
+               if (this.enemyManager) {
+                     // 使用炸弹
+                    this.onBombChange(-1);
+                    const nodes = this.enemyManager.children;
+
+                    for (let i = nodes.length - 1; i >= 0; i--) {
+                       const node = nodes[i];
+                       const enemy = node.getComponent(Enemy);
+                       if (enemy) {
+                          enemy.enemyExploe();
+                       }
+                    }
+                }
+
+            }
+            // 双击逻辑
+        }
+        
+        this.lastClickTime = currentTime;
     }
 
      public static get instance(): GameManager {
 
         return this._instance;
+    }
+
+    protected onDestroy(): void {
+        
+        input.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+        
     }
 
     // 生命变化
